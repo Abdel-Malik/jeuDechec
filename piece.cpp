@@ -4,12 +4,18 @@
 
 Piece::Piece(Position pos, Color color) : color_(color), position_(pos) {}
 
+Piece::Piece(Position pos, Color color, int val) : color_(color), position_(pos), valPiece(val) {}
+
 void Piece::setCaptured(bool b) {
     is_captured_ = b;
 }
 
 bool Piece::isCaptured() const  {
   return is_captured_;
+}
+
+int Piece::value() const  {
+  return valPiece;
 }
 
 Color Piece::getColor() const {

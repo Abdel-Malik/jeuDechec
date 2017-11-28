@@ -14,17 +14,32 @@ Game::Game() { }
 
 void Game::play(Move *m) {
     assert(m != NULL);
+    movePlayed.push(m);
     m->perform(&board_);
     board_.switch_player();
 }
 
 bool Game::undo() {
-    std::cout << "not yet implemented" << std::endl;
-    return false;
+    bool b = false;
+    if(!movePlayed.empty()){
+	Move* m = movePlayed.top();
+	movePlayed.pop();
+	m->unPerform(&board_);
+	b = true;
+    }
+    return b;
 }
 
 void Game::display() {
     board_.display();
+}
+
+void Game::displayValueHeuristic() {
+    board_.displayValueHeuristic();
+}
+
+void Game::displayCaptured() {
+    board_.displayCaptured();
 }
 
 std::vector<Move *> Game::getAllLegalMoves() {

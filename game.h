@@ -19,6 +19,11 @@ public:
 
     void display();
 
+    void displayValueHeuristic();
+
+//show pieces captured by each player
+    void displayCaptured();
+
     bool undo();
 
     std::vector<Move *> getAllLegalMoves();
@@ -30,6 +35,7 @@ public:
 private:
 
     Board board_;
+    std::stack<Move*> movePlayed;
 };
 
 #endif // GAME_H_

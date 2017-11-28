@@ -7,10 +7,6 @@
 #include <cassert>
 #include <cstring>
 
-int Board::heuristic() const {
-    return 0;
-}
-
 bool Board::isInside(int i, int j) const {
     return i >= 0 && i < 8 && j >= 0 && j < 8;
 }
@@ -67,12 +63,22 @@ Board::Board() {
         board_[1][i] = addPiece(new Pawn({1,i}, WHITE)); 
     }
 
+    board_[7][7] = addPiece(new Rook({7,7}, BLACK));
+    board_[7][0] = addPiece(new Rook({7,0}, BLACK));
+    board_[7][1] = addPiece(new Knight({7,1}, BLACK));
+    board_[7][6] = addPiece(new Knight({7,6}, BLACK));
     board_[7][2] = addPiece(new Bishop({7,2}, BLACK));
     board_[7][4] = king_[BLACK] = addPiece(new King({7,4}, BLACK));
+    board_[7][3] =  addPiece(new Queen({7,3}, BLACK));
     board_[7][5] = addPiece(new Bishop({7,5}, BLACK));
 
+    board_[0][7] = addPiece(new Rook({0,7}, WHITE));
+    board_[0][0] = addPiece(new Rook({0,0}, WHITE));
+    board_[0][1] = addPiece(new Knight({0,1}, WHITE));
+    board_[0][6] = addPiece(new Knight({0,6}, WHITE));
     board_[0][2] = addPiece(new Bishop({0,2}, WHITE));
     board_[0][4] = king_[WHITE] = addPiece(new King({0,4}, WHITE));
+    board_[0][3] = addPiece(new Queen({0,3}, WHITE));
     board_[0][5] = addPiece(new Bishop({0,5}, WHITE));
 
 }
@@ -116,6 +122,20 @@ void Board::display() {
         std::cout << "Game over" << std::endl;
     }
 
+}
+
+void Board::displayCaptured() {
+    std::cout << "White player : ";
+    for(auto p : pieces_[WHITE]) {
+        if(p->isCaptured())
+	    std::cout << p->toChar() <<",";
+    }
+    std::cout << "\n Black player : ";
+    for(auto p : pieces_[BLACK]) {
+        if(p->isCaptured())
+	    std::cout << p->toChar() <<",";
+    }
+    std::cout<<std::endl;
 }
 
 std::vector<Move *> Board::getAllMoves(Color player) const {
@@ -178,3 +198,19 @@ bool Board::isInCheck(Color p) const {
     return false;
 }
 
+int Board::heuristic() const{
+    int value = 0;
+    for(auto p : pieces_[BLACK]){
+        if(p->isCaptured())
+	    value += p->value();
+    }
+    for(auto p : pieces_[WHITE]){
+        if(p->isCaptured())
+	    value -= p->value();
+    }
+    return value;
+}
+
+void Board::displayValueHeuristic(){
+    std::cout << "Value heuristic : "<<heuristic()<<std::endl;
+}

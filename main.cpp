@@ -70,10 +70,16 @@ void evaluateCommand(Game &g, const std::string &line) {
                 std::cout << x->toBasicNotation() << " ";
             }
             std::cout << std::endl; 
+        } else if (command == "dead" || command == "e") {
+            g.displayCaptured();
+        } else if (command == "score" || command == "o") {
+            g.displayValueHeuristic();
         } else if (command == "help" || command == "h") {
             std::cout << "*move*: play *move* (type '?' for list of possible moves)" << std::endl;
             std::cout << "play s, p s, p: computer plays next move, s = strength" << std::endl;
             std::cout << "display, d: display current state of the game" << std::endl;
+            std::cout << "display dead pieces, e: display all eated piece during the game" << std::endl;
+            std::cout << "display board score, o: display the current score on the board" << std::endl;
             std::cout << "undo, u: cancel last move" << std::endl;
             std::cout << "?: print all possible moves" << std::endl;
             std::cout << "quit, q: quit game" << std::endl;
@@ -82,8 +88,11 @@ void evaluateCommand(Game &g, const std::string &line) {
             std::cout << "bye bye" << std::endl;
             exit(0);
         } else if (command == "undo" || command == "u") {
-            std::cout << "undo last move" << std::endl;
-            g.undo();
+            bool b = g.undo();
+	    if(b)
+		std::cout << "undo last move" << std::endl;
+	    else
+		std::cout << "no move to undo" << std::endl;
         } else if (command == "play" || command == "p") {
             computerPlay(g, 0);
             return;

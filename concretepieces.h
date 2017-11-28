@@ -21,6 +21,35 @@ public:
     char toChar() const;
 };
 
+class Knight : public Piece {
+
+public: 
+    Knight(Position, Color);
+
+
+    void getMoves(const Board &b, std::vector<Move *> &res) const;
+
+    char notation() const;
+
+    char toChar() const;
+
+};
+
+class Rook : public Piece {
+
+public: 
+    Rook(Position, Color);
+
+
+    void getMoves(const Board &b, std::vector<Move *> &res) const;
+
+    char notation() const;
+
+    char toChar() const;
+
+};
+
+
 class Bishop : public Piece {
 
 public: 
@@ -32,6 +61,7 @@ public:
     char notation() const;
 
     char toChar() const;
+
 };
 
 
@@ -46,6 +76,21 @@ public:
     char notation() const;
 
     char toChar() const;
+
+};
+
+class Queen : public Piece {
+
+public: 
+    Queen(Position, Color);
+
+
+    void getMoves(const Board &, std::vector<Move *> &) const;
+
+    char notation() const;
+
+    char toChar() const;
+
 };
 
 #endif // CONCRETEPIECES_H_

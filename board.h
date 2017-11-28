@@ -65,6 +65,10 @@ public:
 
     void display();
 
+    void displayValueHeuristic();
+
+    void displayCaptured();
+
     // returns a "score" that estimates how favorable the game is for a given 
     // player. A stricly positive score means that White is winning.
     // heuristic() == INF <=> Black is checkmate

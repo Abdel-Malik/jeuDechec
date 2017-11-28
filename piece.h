@@ -18,6 +18,7 @@ class Move;
 class Piece {
 public:
     Piece(Position, Color);
+    Piece(Position, Color, int);
 
     // returns the char used in the standard algebric notation of the piece
     // exception returns ' ' for a Pawn (see Pawn)
@@ -31,6 +32,9 @@ public:
     virtual void getMoves(const Board &b, std::vector<Move *> &res) const = 0;
 
     bool isCaptured() const;
+
+    // returns the piece
+    int value() const;
 
     void setCaptured(bool);
 
@@ -51,6 +55,7 @@ protected:
     static void positionsToMoves(const Board &g, Position from, 
                       const std::vector<Position> &tos, 
                       std::vector<Move *> &res); 
+    int valPiece = 0;
 
 private:
     Color color_;
