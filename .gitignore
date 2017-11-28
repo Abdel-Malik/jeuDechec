@@ -1,0 +1,8 @@
+#makefile
+Makefile
+
+#executable
+chessGame
+
+#objets
+.o
