@@ -6,7 +6,7 @@
 #include "piece.h"
 #include "move.h"
 #include "board.h"
-
+//#include "artificialIntelligence.h"
 // This class defines a game as seen by the 'main' module. It has the following
 // roles:
 // 1. It is a wrapper to a Board object 
@@ -34,8 +34,15 @@ public:
  
 private:
 
+//    AI opponent;
     Board board_;
     std::stack<Move*> movePlayed;
+
+    Move* randomMove();
+    Move* greedyMove();
+
+    void maximiseHeuristic(std::vector<Move*> ms,Move** fm);
+    void minimiseHeuristic(std::vector<Move*> ms,Move** fm);
 };
 
 #endif // GAME_H_

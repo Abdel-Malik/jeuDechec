@@ -94,7 +94,7 @@ void evaluateCommand(Game &g, const std::string &line) {
 	    else
 		std::cout << "no move to undo" << std::endl;
         } else if (command == "play" || command == "p") {
-            computerPlay(g, 0);
+            computerPlay(g, 1);
             return;
         } else {
             Move *m = parseAndValidate(g, line);
