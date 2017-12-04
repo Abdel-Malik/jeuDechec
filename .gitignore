@@ -5,4 +5,4 @@ Makefile
 chessGame
 
 #objets
-.o
+*.o

@@ -72,6 +72,9 @@ void evaluateCommand(Game &g, const std::string &line) {
             std::cout << std::endl; 
         } else if (command == "dead" || command == "e") {
             g.displayCaptured();
+        } else if (command == "auto" || command == "a") {
+            while(true){computerPlay(g, 2);
+            computerPlay(g, 2);}
         } else if (command == "score" || command == "o") {
             g.displayValueHeuristic();
         } else if (command == "help" || command == "h") {
@@ -94,7 +97,7 @@ void evaluateCommand(Game &g, const std::string &line) {
 	    else
 		std::cout << "no move to undo" << std::endl;
         } else if (command == "play" || command == "p") {
-            computerPlay(g, 1);
+            computerPlay(g, 2);
             return;
         } else {
             Move *m = parseAndValidate(g, line);

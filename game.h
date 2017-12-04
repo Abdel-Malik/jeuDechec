@@ -43,6 +43,9 @@ private:
 
     void maximiseHeuristic(std::vector<Move*> ms,Move** fm);
     void minimiseHeuristic(std::vector<Move*> ms,Move** fm);
+    Move* minimaxMove(int steps);
+    double recHeuristicMiniMax(std::vector<Move*> msI,int sR, double val, bool mini);
+
 };
 
 #endif // GAME_H_

@@ -10,6 +10,8 @@
 #include "concretepieces.h"
 #include "move.h"
 
+#define MOVE_IN_ADVANCE (2)
+
 Game::Game() { }
 
 void Game::play(Move *m) {
@@ -52,6 +54,8 @@ Move *Game::computerSuggestion(int strength) {
     Move* move = randomMove();
     if(strength==1)
 	move = greedyMove();
+    if(strength==2)
+	move = minimaxMove(MOVE_IN_ADVANCE);
     return move;
 }
 
@@ -59,6 +63,7 @@ Move *Game::computerSuggestion(int strength) {
 
 Move* Game::randomMove(){
     std::vector<Move*> moves = getAllLegalMoves();
+    srand(time(NULL));
     int choice = rand()%moves.size();
     return moves[choice];
 }
@@ -68,28 +73,53 @@ Move* Game::greedyMove(){
     Move* finalChoice = randomMove();
     if(board_.getPlayer()==WHITE){
 	maximiseHeuristic(moves,&finalChoice);
-	    std::cout<<" move : "<<finalChoice<<std::endl;
-
     }else
 	minimiseHeuristic(moves,&finalChoice);
     return finalChoice;
 }
-/*
+
 Move* Game::minimaxMove(int steps){
     std::vector<Move*> moves = getAllLegalMoves();
-    Move* finalChoice = randomMove();
+    std::vector<Move*> movesF;
+    if(moves.size()==0)
+	return NULL;
+    //Init value of the board
+    moves[0]->perform(&board_);
+    double val = board_.heuristic();
+    moves[0]->unPerform(&board_);
+    movesF.push_back(moves[0]);
+
+    double valRec;
     int k = steps;
+    bool minimise = true;
+    srand(time(NULL));
+    if(board_.getPlayer()==WHITE)
+	minimise = !minimise;
     if(k>3)
 	k=3;
-    if(board_.getPlayer()==WHITE){
-	maximiseHeuristic(moves,&finalChoice);
-	    std::cout<<" move : "<<finalChoice<<std::endl;
-
-    }else
-	minimiseHeuristic(moves,&finalChoice);
-    return finalChoice;
+    for(Move* mT :moves){
+	mT->perform(&board_);
+	valRec = recHeuristicMiniMax(getAllLegalMoves(),k-1,val,!minimise);
+	mT->unPerform(&board_);
+	if(minimise){
+	    if(valRec<val){
+		val = valRec;
+		movesF.clear();
+		movesF.push_back(mT);
+	    }else if(valRec == val)
+		movesF.push_back(mT);
+	}else{
+	    if(valRec>val){
+		val = valRec;
+		movesF.clear();
+		movesF.push_back(mT);
+	    }else if(valRec == val)
+		movesF.push_back(mT);
+	}
+    }
+    return movesF[rand()%movesF.size()];
 }
-*/
+
 void Game::maximiseHeuristic(std::vector<Move*> allMoves, Move** finalChoice){
     int valMax = board_.heuristic();
     for(Move* mTemp : allMoves){
@@ -114,4 +144,23 @@ void Game::minimiseHeuristic(std::vector<Move*> allMoves, Move** finalChoice){
 	}
 	mTemp->unPerform(&board_);
     }
+}
+
+double Game::recHeuristicMiniMax(std::vector<Move*> moveStepI,int stepRemaining, double valChoice,bool minimiseHeuristic){
+    double bestVal(valChoice),valRec;
+    if(moveStepI.size() ==0||stepRemaining==0)
+	return board_.heuristic();
+    for(Move* mT : moveStepI){
+	mT->perform(&board_);
+	valRec = recHeuristicMiniMax(board_.getAllLegalMoves(),stepRemaining-1,bestVal,!minimiseHeuristic);
+	if(minimiseHeuristic){
+	    if(valRec<bestVal)
+		bestVal = valRec;
+	}else{
+	    if(valRec>bestVal)
+		bestVal = valRec;
+	}
+	mT->unPerform(&board_);
+    }
+    return bestVal;
 }
