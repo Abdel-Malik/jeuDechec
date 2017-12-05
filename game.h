@@ -41,10 +41,10 @@ private:
     Move* randomMove();
     Move* greedyMove();
 
-    void maximiseHeuristic(std::vector<Move*> ms,Move** fm);
-    void minimiseHeuristic(std::vector<Move*> ms,Move** fm);
+    void maximiseHeuristic(std::vector<Move*> ms,Move** fm, int boardScore);
+    void minimiseHeuristic(std::vector<Move*> ms,Move** fm, int boardScore);
     Move* minimaxMove(int steps);
-    double recHeuristicMiniMax(std::vector<Move*> msI,int sR, double val, bool mini);
+    int recHeuristicMiniMax(std::vector<Move*> msI,int sR, bool mini);
 
 };
 

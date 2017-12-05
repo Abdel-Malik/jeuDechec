@@ -1,0 +1,101 @@
+// This is a simple implementation of a "prefix tree" 
+// https://en.wikipedia.org/wiki/Trie
+// used to represent and play openings in chess.
+//
+// An *opening* is a sequence of move. For instance, the following openings
+// 1. a, f  
+// 2. a, b
+// 3. a, b, h
+// 4. a, c
+// 5. e, f, g
+// correspond the tree
+//           
+//   --a--*-f--*
+//   |    |--b-*-h-*
+// *-|    |--c-----*
+//   |   
+//    -e--*-f-*-g--*
+#include "tree.h"
+
+	/***   Tree implementation   ***/
+
+    // add the opening given in `opening` vector starting from index i
+    // ...exercise to the reader: use an iterator instead
+void Tree::addOpening(const std::vector<std::string> &opening, int i) {
+    if ((size_t)i == opening.size()) {
+	return;
+    }
+    std::string move = opening[i];
+    Tree *t = NULL;
+    if (children_.find(move) == children_.end()) {
+    	t = new Tree();
+    children_[move] = t;
+    }else{
+    	t = children_[move];
+    }
+    t->addOpening(opening, i+1);
+}
+
+    // print all possible moves from current node/tree
+std::vector<std::string> Tree::allMoves(){
+    std::vector<std::string> res;
+    // kv goes over all pairs in map children_
+    // kv = (kv.first, kv.second)
+    for (const auto &kv : children_) {
+        res.push_back(kv.first);
+    }
+    return res;
+}
+
+    // return node/tree after playing move s
+    // from current node/tree
+Tree* Tree::playMove(const std::string &s){
+    assert(children_.find(s) != children_.end());
+    return children_[s];
+}
+
+	/***   end   ***/
+
+
+// print a vector of string on one line
+void print_vector(const std::vector<std::string> &v) {
+    std::cout << "vector: ";
+    for (auto &s : v) {
+    std::cout << s << " "; 
+    }
+    std::cout << std::endl;
+}
+
+
+// Transforms a string s into a vector of words (substrings not containing 
+// spaces)
+void tokenize(const std::string &s, std::vector<std::string> &tokens) {
+    std::istringstream f(s);
+    std::string word;
+    while (f >> word) {
+        tokens.push_back(word);
+    }
+}
+
+
+Tree* createTree(std::string path){
+    Tree* theTree = new Tree();
+    std::ifstream file(path);
+    int end;
+    if(file){
+	std::string content;
+	std::vector<std::string> tokenContent;
+        while(getline(file, content)){
+	    end = 0;
+	    tokenize(content,tokenContent);
+	    while(tokenContent[end]!=";")
+		end++;
+	    theTree->addOpening(tokenContent,end+1);
+	    std::cout << "lu : "<<content<<" end="<<end<<std::endl;
+	}
+	file.close();
+    }else
+	std::cout << "file not found : "<<path<<std::endl;
+    return theTree;
+}
+

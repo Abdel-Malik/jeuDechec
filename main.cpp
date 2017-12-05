@@ -3,10 +3,7 @@
 // (read-eval-print-loop). Most commands are evaluted by calling a 
 // corresponding method on the Game object.
 
-#include <iostream>
-#include <sstream>
-#include <cassert>
-#include <map>
+#include "tree.h"
 #include "game.h"
 #include "move.h"
 #include "piece.h"
@@ -28,16 +25,6 @@ Move *parseAndValidate(Game &g, const std::string &line) {
     }
     }
     return NULL;
-}
-
-// Transforms a string s into a vector of words (substrings not containing 
-// spaces)
-void tokenize(const std::string &s, std::vector<std::string> &tokens) {
-    std::istringstream f(s);
-    std::string word;    
-    while (f >> word) {
-        tokens.push_back(word);
-    }
 }
 
 // Asks the computer what next move to play. 
@@ -74,7 +61,7 @@ void evaluateCommand(Game &g, const std::string &line) {
             g.displayCaptured();
         } else if (command == "auto" || command == "a") {
             while(true){computerPlay(g, 2);
-            computerPlay(g, 2);}
+            computerPlay(g, 1);}
         } else if (command == "score" || command == "o") {
             g.displayValueHeuristic();
         } else if (command == "help" || command == "h") {
@@ -97,7 +84,12 @@ void evaluateCommand(Game &g, const std::string &line) {
 	    else
 		std::cout << "no move to undo" << std::endl;
         } else if (command == "play" || command == "p") {
-            computerPlay(g, 2);
+	    int str = 1;
+	    if(commands.size()>1){
+                std::string &command2 = commands[1];
+		str = std::stoi(command2);
+	    }
+            computerPlay(g, str);
             return;
         } else {
             Move *m = parseAndValidate(g, line);
@@ -111,13 +103,20 @@ void evaluateCommand(Game &g, const std::string &line) {
         }
     }
 
-int main() { 
+int main() {
     Game g;
     std::string line;
+    Tree tTree = *createTree("./op.txt");
+    print_vector(tTree.allMoves());
+    std::vector<std::string> moves = tTree.allMoves();
+    std::cout << moves.size()<<std::endl;
+    tTree = *(tTree.playMove(moves[0]));
+    print_vector(tTree.allMoves());
+    print_vector(tTree.allMoves());
     while(true) {
         std::cout << "> ";
         getline(std::cin, line);
-        evaluateCommand(g, line); 
+        evaluateCommand(g, line);
     }
     return 0;
 }
