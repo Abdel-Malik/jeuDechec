@@ -11,13 +11,20 @@
 #include "move.h"
 
 #define MOVE_IN_ADVANCE (2)
+#define DEFAULT_PATH ("op.txt")
 
-Game::Game() { }
+Game::Game(){
+    openings = new Tree(DEFAULT_PATH);
+}
 
 void Game::play(Move *m) {
     assert(m != NULL);
     movePlayed.push(m);
     m->perform(&board_);
+    if((beginning)&&((openings->allMoves()).size())>0&&(openings->isMoveExist(m->toBasicNotation())))
+	openings = openings->playMove(m->toBasicNotation());
+    else
+	beginning=false;
     board_.switch_player();
 }
 
@@ -27,6 +34,8 @@ bool Game::undo() {
 	Move* m = movePlayed.top();
 	movePlayed.pop();
 	m->unPerform(&board_);
+	if(beginning)
+    	    openings = openings->unPlayMove();
 	board_.switch_player();
 	b = true;
     }
@@ -52,10 +61,30 @@ std::vector<Move *> Game::getAllLegalMoves() {
 
 Move *Game::computerSuggestion(int strength) {
     Move* move = randomMove();
-    if(strength==1)
-	move = greedyMove();
-    if(strength==2)
-	move = minimaxMove(MOVE_IN_ADVANCE);
+    std::string nextStrMove;
+    Move* nextMove;
+    if(beginning){
+    	if(movePlayed.size()>0){
+	    nextStrMove = openings->checkKnownMove();
+    	}else{
+	    nextStrMove = openings->giveARandomMove();
+    	}
+    }
+    if(nextStrMove.size() == 0){
+	beginning = false;
+	if(strength==1)
+	    move = greedyMove();
+    	if(strength==2)
+	    move = minimaxMove(MOVE_IN_ADVANCE);
+    }else{
+	std::vector<Move*> curMoves = getAllLegalMoves();
+	for(auto x : curMoves){
+	    std::string s = x->toBasicNotation();
+	    if(s==nextStrMove)
+		nextMove = x;
+}
+	move = nextMove;
+    }
     return move;
 }
 

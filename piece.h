@@ -18,7 +18,9 @@ class Move;
 class Piece {
 public:
     Piece(Position, Color);
-    Piece(Position, Color, int);
+
+//constructor with a given value a the piece
+    Piece(Position, Color, int i);
 
     // returns the char used in the standard algebric notation of the piece
     // exception returns ' ' for a Pawn (see Pawn)
@@ -55,12 +57,14 @@ protected:
     static void positionsToMoves(const Board &g, Position from, 
                       const std::vector<Position> &tos, 
                       std::vector<Move *> &res); 
-    int valPiece = 0;
 
 private:
     Color color_;
     Position position_;
     bool is_captured_ = false;
+//The value of the piece created
+    const int valPiece;
+
 };
 
 #endif // PIECE_H_

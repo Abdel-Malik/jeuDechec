@@ -16,3 +16,7 @@ std::string getFileRank(Position p) {
   std::string s = {(char) (p.second + 'a'), (char) (p.first + '1')};
   return s;
 }
+
+int translateLetterToInt(char letter){
+    return (int)(letter-'a');
+}

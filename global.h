@@ -12,6 +12,9 @@ enum Color { WHITE = 1, BLACK = 0 };
 // In chess notation {0,0} = A1, {7,7} = G8 
 typedef std::pair<unsigned int, unsigned int> Position;
 
+//return the value (int) of ch. a = 0 ; b = 1 ...
+int translateLetterToInt(char ch);
+
 // returns the file letter of p
 // e.g. getFileLetter({2,3}) == 'd'
 char getFileLetter(Position p);

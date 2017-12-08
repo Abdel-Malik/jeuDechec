@@ -30,7 +30,7 @@ Move *parseAndValidate(Game &g, const std::string &line) {
 // Asks the computer what next move to play. 
 void computerPlay(Game &g, int strength) {
     if (isFinished(g)) {
-       std::cout << "Nothing to play !" << std::endl;
+//       std::cout << "Nothing to play !" << std::endl;
        return; 
     }
     Move *m = g.computerSuggestion(strength);
@@ -61,7 +61,7 @@ void evaluateCommand(Game &g, const std::string &line) {
             g.displayCaptured();
         } else if (command == "auto" || command == "a") {
             while(true){computerPlay(g, 2);
-            computerPlay(g, 1);}
+            computerPlay(g, 2);}
         } else if (command == "score" || command == "o") {
             g.displayValueHeuristic();
         } else if (command == "help" || command == "h") {
@@ -84,7 +84,7 @@ void evaluateCommand(Game &g, const std::string &line) {
 	    else
 		std::cout << "no move to undo" << std::endl;
         } else if (command == "play" || command == "p") {
-	    int str = 1;
+	    int str = 2;
 	    if(commands.size()>1){
                 std::string &command2 = commands[1];
 		str = std::stoi(command2);
@@ -106,13 +106,6 @@ void evaluateCommand(Game &g, const std::string &line) {
 int main() {
     Game g;
     std::string line;
-    Tree tTree = *createTree("./op.txt");
-    print_vector(tTree.allMoves());
-    std::vector<std::string> moves = tTree.allMoves();
-    std::cout << moves.size()<<std::endl;
-    tTree = *(tTree.playMove(moves[0]));
-    print_vector(tTree.allMoves());
-    print_vector(tTree.allMoves());
     while(true) {
         std::cout << "> ";
         getline(std::cin, line);

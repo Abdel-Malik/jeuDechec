@@ -50,14 +50,13 @@ void Tree::addOpening(const std::vector<std::string> &opening, int i) {
 	return;
     }
     std::string move = opening[i];
-    Tree* t = NULL;
+    Tree *t = NULL;
     if (children_.find(move) == children_.end()) {
     	t = new Tree();
-	t->currentNode = move;
-        children_[move] = t;
-    }else
+    children_[move] = t;
+    }else{
     	t = children_[move];
-    t->father = this;
+    }
     t->addOpening(opening, i+1);
 }
 
@@ -80,30 +79,9 @@ Tree* Tree::playMove(const std::string &s){
 }
 
 Tree* Tree::unPlayMove(){
-    if(father != NULL){
-	return father;
-    }
+    if(father.size() != 0)
+	return children_.at(father);
     return this;
-}
-
-bool Tree::isMoveExist(const std::string &s){
-    return(children_.find(s) != children_.end());
-}
-
-
-std::string Tree::checkKnownMove(){
-    std::string nextMove = "";
-    if(children_.size() > 0){
-	nextMove = giveARandomMove();
-    }
-    return nextMove;
-}
-
-std::string Tree::giveARandomMove(){
-    std::vector<std::string> listMove = allMoves();
-    srand(time(NULL));
-    std::string strMove = listMove[(rand()%listMove.size())];
-    return strMove;
 }
 
 	/***   end   ***/

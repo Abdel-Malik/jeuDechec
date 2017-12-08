@@ -27,16 +27,17 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-
+#include "move.h"
 class Tree;
 
 void print_vector(const std::vector<std::string> &v);
 void tokenize(const std::string &s, std::vector<std::string> &tokens);
-Tree* createTree(std::string path);
 
 class Tree {
     public:
 
+    Tree();
+    Tree(std::string path);
     // add the opening given in `opening` vector starting from index i
     // ...exercise to the reader: use an iterator instead
     void addOpening(const std::vector<std::string> &opening, int i);
@@ -48,32 +49,29 @@ class Tree {
     // from current node/tree
     Tree *playMove(const std::string &s);
 
+//return the tree above the current if it exist. (previous state)
+    Tree* unPlayMove();
+
+//return if the given string correspond to a known move
+    bool isMoveExist(const std::string &s);
+
+//Use to return a random move in all known ones. 
+    std::string checkKnownMove();
+    std::string giveARandomMove();
+
 private:
     // a tree is a map from string (ie. move) to trees
     std::map<std::string, Tree *> children_;
+
+//Used for navigation through the whole tree
+    Tree* father = NULL;
+    std::string currentNode;
+
+//
+    void initializeTree(std::string path);
 };
 
 // print a vector of string on one line
 void print_vector(const std::vector<std::string> &v);
 
-/*int main() { 
-    Tree *t = new Tree();
-
-    // add all the openings to the initially empty tree
-    t->addOpening({"a", "f"}, 0);
-    t->addOpening({"a", "b"}, 0);
-    t->addOpening({"a", "b", "h"}, 0);
-    t->addOpening({"a", "c"}, 0);
-    t->addOpening({"e", "f", "g"}, 0);
-
-    // initially, moves a and e are possible
-    print_vector(t->allMoves());
-    // if we play a
-    t = t->playMove("a");
-    // moves b, c and f become possible
-    print_vector(t->allMoves());
-    t = t->playMove("b");
-    print_vector(t->allMoves());
-}
-*/
 #endif

@@ -2,9 +2,9 @@
 #include "global.h"
 #include "assert.h"
 
-Piece::Piece(Position pos, Color color) : color_(color), position_(pos) {}
+Piece::Piece(Position pos, Color color) : color_(color), position_(pos),valPiece(0) {}
 
-Piece::Piece(Position pos, Color color, int val) : color_(color), position_(pos), valPiece(val) {}
+Piece::Piece(Position pos, Color color, int val=0) : color_(color), position_(pos), valPiece(val) {}
 
 void Piece::setCaptured(bool b) {
     is_captured_ = b;
